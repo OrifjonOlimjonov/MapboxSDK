@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape>
+        <corners android:radius="@dimen/_30sdp"/>
+        <gradient android:angle="-45" android:startColor="#1E1E1E" android:endColor="#585858"/>
+    </shape>
+</item>
+    <item android:drawable="@drawable/ic_rocket"
+        android:top="@dimen/_10sdp"
+        android:bottom="@dimen/_10sdp"
+        android:left="@dimen/_10sdp"
+        android:right="@dimen/_10sdp"/>
+</layer-list>
