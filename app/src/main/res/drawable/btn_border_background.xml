@@ -3,7 +3,7 @@
 <item>
     <shape>
         <corners android:radius="@dimen/_30sdp"/>
-        <gradient android:angle="-45" android:startColor="#1E1E1E" android:endColor="#585858"/>
+        <gradient android:angle="-45" android:startColor="@color/start" android:endColor="@color/end"/>
     </shape>
 </item>
     <item android:drawable="@drawable/ic_rocket"

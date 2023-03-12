@@ -11,6 +11,9 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="color">#000000</item>
+
+        <item name="cardBackgroundColor">#BEBEBE</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>
