@@ -4,4 +4,5 @@
     <color name="green">#00A43E</color>
     <color name="start">#5F5F5F</color>
     <color name="end">#CFCFCF</color>
+    <color name="text">#FFFFFF</color>
 </resources>
