@@ -2,6 +2,7 @@ package uz.orifjon.mapboxexample
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.Intent
 import android.content.res.Configuration
 import android.location.Location
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.mapbox.maps.plugin.compass.compass
 import com.mapbox.maps.plugin.locationcomponent.*
 import com.mapbox.maps.plugin.scalebar.scalebar
 import uz.orifjon.mapboxexample.databinding.ActivityMainBinding
+import uz.orifjon.mapboxexample.service.LocationService
 import uz.orifjon.mapboxexample.utils.LocationPermissionHelper
 import java.lang.ref.WeakReference
 
@@ -31,8 +33,14 @@ class MainActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
+
         locationPermissionHelper.checkPermissions {
+            Intent(applicationContext,LocationService::class.java).apply {
+                action = LocationService.ACTION_START
+                startService(this)
+            }
             onMapReady()
         }
 
@@ -40,16 +48,18 @@ class MainActivity : AppCompatActivity()  {
 
     }
     private fun onMapReady() {
-
         binding.mapView.getMapboxMap().setCamera(
             CameraOptions.Builder()
                 .zoom(14.0)
                 .build()
         )
 
+        disabledScaleAndCompass()
 
-        binding.mapView.scalebar.enabled = false
-        binding.mapView.compass.enabled = false
+        configureTheme()
+    }
+
+    private fun configureTheme() {
         when(resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_YES ->
             {
@@ -67,7 +77,11 @@ class MainActivity : AppCompatActivity()  {
                 }
             }
         }
+    }
 
+    private fun disabledScaleAndCompass() {
+        binding.mapView.scalebar.enabled = false
+        binding.mapView.compass.enabled = false
     }
 
 
