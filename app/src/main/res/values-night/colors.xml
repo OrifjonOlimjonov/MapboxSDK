@@ -5,4 +5,5 @@
     <color name="start">#5F5F5F</color>
     <color name="end">#CFCFCF</color>
     <color name="text">#FFFFFF</color>
+    <color name="zoomButton">#BEBEBE</color>
 </resources>

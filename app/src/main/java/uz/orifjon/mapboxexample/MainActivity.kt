@@ -9,7 +9,9 @@ import android.os.Bundle
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.ActivityCompat
 import com.mapbox.android.core.location.*
+import com.mapbox.geojson.Point
 import com.mapbox.maps.*
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
@@ -21,55 +23,98 @@ import uz.orifjon.mapboxexample.service.LocationService
 import uz.orifjon.mapboxexample.utils.LocationPermissionHelper
 import java.lang.ref.WeakReference
 
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity() {
 
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var locationPermissionHelper: LocationPermissionHelper
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
 
         locationPermissionHelper.checkPermissions {
-            Intent(applicationContext,LocationService::class.java).apply {
-                action = LocationService.ACTION_START
-                startService(this)
-            }
+
             onMapReady()
+            startSaveLocation()
         }
 
 
+    }
+
+    private fun startSaveLocation(){
+
+        Intent(applicationContext, LocationService::class.java).apply {
+            action = LocationService.ACTION_START
+            startService(this)
+        }
 
     }
+
     private fun onMapReady() {
-        binding.mapView.getMapboxMap().setCamera(
-            CameraOptions.Builder()
-                .zoom(14.0)
-                .build()
-        )
+
+        cameraOption()
 
         disabledScaleAndCompass()
 
         configureTheme()
     }
 
+    private fun cameraOption() {
+        var zoom = 14.0
+        binding.mapView.getMapboxMap().setCamera(
+            CameraOptions.Builder()
+                .zoom(14.0)
+                .build()
+        )
+
+        binding.btnZoomPlus.setOnClickListener {
+            zoom++
+            binding.mapView.getMapboxMap().setCamera(
+                CameraOptions.Builder()
+                    .zoom(zoom)
+                    .build()
+            )
+        }
+
+        binding.btnZoomMinus.setOnClickListener {
+            zoom--
+            binding.mapView.getMapboxMap().setCamera(
+                CameraOptions.Builder()
+                    .zoom(zoom)
+                    .build()
+            )
+        }
+
+        binding.btnNavigation.setOnClickListener {
+            binding.mapView.getMapboxMap().setCamera(
+                CameraOptions.Builder()
+                    .center(Point.fromLngLat(41.34,69.28))
+                    .zoom(zoom)
+                    .build()
+            )
+        }
+    }
+
+
     private fun configureTheme() {
-        when(resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_YES ->
-            {
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> {
                 binding.mapView.getMapboxMap().loadStyleUri(
                     Style.DARK
                 ) {
                     initLocationComponent()
                 }
             }
-            Configuration.UI_MODE_NIGHT_NO->{
+            Configuration.UI_MODE_NIGHT_NO -> {
                 binding.mapView.getMapboxMap().loadStyleUri(
                     Style.LIGHT
                 ) {
@@ -115,8 +160,6 @@ class MainActivity : AppCompatActivity()  {
     }
 
 
-
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -125,8 +168,6 @@ class MainActivity : AppCompatActivity()  {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-
-
 
 
 }

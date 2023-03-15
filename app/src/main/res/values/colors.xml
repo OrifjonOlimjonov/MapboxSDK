@@ -11,4 +11,5 @@
     <color name="start">#1E1E1E</color>
     <color name="end">#585858</color>
     <color name="text">#000000</color>
+    <color name="zoomButton">#CCFFFFFF</color>
 </resources>

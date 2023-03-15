@@ -45,7 +45,7 @@ class LocationService : Service() {
 
     private fun start() {
         locationClient
-            .getLocationUpdates(1000L)
+            .getLocationUpdates(5000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 val lat = location.latitude
