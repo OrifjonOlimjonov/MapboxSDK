@@ -10,6 +10,8 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.mapbox.android.core.location.*
 import com.mapbox.geojson.Point
 import com.mapbox.maps.*
@@ -20,8 +22,10 @@ import com.mapbox.maps.plugin.locationcomponent.*
 import com.mapbox.maps.plugin.scalebar.scalebar
 import uz.orifjon.mapboxexample.databinding.ActivityMainBinding
 import uz.orifjon.mapboxexample.models.LocationDatabase
+import uz.orifjon.mapboxexample.models.UserLocation
 import uz.orifjon.mapboxexample.service.LocationService
 import uz.orifjon.mapboxexample.utils.LocationPermissionHelper
+import uz.orifjon.mapboxexample.viewmodel.MainViewModel
 import java.lang.ref.WeakReference
 
 class MainActivity : AppCompatActivity() {
@@ -29,14 +33,18 @@ class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
-
+    companion object var zoom =  14.0
     private lateinit var locationPermissionHelper: LocationPermissionHelper
+    private lateinit var viewModel: MainViewModel
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
 
@@ -46,12 +54,14 @@ class MainActivity : AppCompatActivity() {
 
             startSaveLocation()
 
+            viewModelSettings()
+
         }
 
 
     }
 
-    private fun startSaveLocation(){
+    private fun startSaveLocation() {
 
         Intent(applicationContext, LocationService::class.java).apply {
             action = LocationService.ACTION_START
@@ -68,10 +78,24 @@ class MainActivity : AppCompatActivity() {
         disabledScaleAndCompass()
 
         configureTheme()
+
+    }
+
+    private fun viewModelSettings() {
+        viewModel.getValue().observe(this
+        ) {
+            val lastLocation = LocationDatabase.getDatabase(this).locationDao().getLastLocation()
+            binding.mapView.getMapboxMap().setCamera(
+                CameraOptions.Builder()
+                    .center(Point.fromLngLat(lastLocation.longitude, lastLocation.latitude))
+                    .zoom(zoom)
+                    .build()
+            )
+        }
     }
 
     private fun cameraOption() {
-        var zoom = 14.0
+
         binding.mapView.getMapboxMap().setCamera(
             CameraOptions.Builder()
                 .zoom(14.0)
@@ -100,10 +124,11 @@ class MainActivity : AppCompatActivity() {
             val lastLocation = LocationDatabase.getDatabase(this).locationDao().getLastLocation()
             binding.mapView.getMapboxMap().setCamera(
                 CameraOptions.Builder()
-                    .center(Point.fromLngLat(lastLocation.longitude,lastLocation.latitude))
+                    .center(Point.fromLngLat(lastLocation.longitude, lastLocation.latitude))
                     .zoom(zoom)
                     .build()
             )
+            viewModel.setValue(lastLocation)
         }
     }
 
