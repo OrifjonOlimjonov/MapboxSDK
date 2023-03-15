@@ -1,17 +1,19 @@
 package uz.orifjon.mapboxexample
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.location.Location
+import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkInfo
+import android.os.Build
 import android.os.Bundle
-import android.os.Looper
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.mapbox.android.core.location.*
 import com.mapbox.geojson.Point
 import com.mapbox.maps.*
@@ -22,18 +24,21 @@ import com.mapbox.maps.plugin.locationcomponent.*
 import com.mapbox.maps.plugin.scalebar.scalebar
 import uz.orifjon.mapboxexample.databinding.ActivityMainBinding
 import uz.orifjon.mapboxexample.models.LocationDatabase
-import uz.orifjon.mapboxexample.models.UserLocation
 import uz.orifjon.mapboxexample.service.LocationService
 import uz.orifjon.mapboxexample.utils.LocationPermissionHelper
 import uz.orifjon.mapboxexample.viewmodel.MainViewModel
 import java.lang.ref.WeakReference
+
 
 class MainActivity : AppCompatActivity() {
 
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
-    companion object var zoom =  14.0
+
+    companion object
+
+    var zoom = 14.0
     private lateinit var locationPermissionHelper: LocationPermissionHelper
     private lateinit var viewModel: MainViewModel
 
@@ -43,12 +48,13 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
 
         locationPermissionHelper.checkPermissions {
+
+            checkGpsEnabled()
 
             onMapReady()
 
@@ -60,6 +66,16 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+    private fun checkGpsEnabled() {
+        val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        if (!statusOfGPS) {
+            Toast.makeText(this, "Please, enable GPS", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun startSaveLocation() {
 
@@ -73,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onMapReady() {
 
-        cameraOption()
+        cameraOptions()
 
         disabledScaleAndCompass()
 
@@ -82,7 +98,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun viewModelSettings() {
-        viewModel.getValue().observe(this
+        viewModel.getValue().observe(
+            this
         ) {
             val lastLocation = LocationDatabase.getDatabase(this).locationDao().getLastLocation()
             binding.mapView.getMapboxMap().setCamera(
@@ -94,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun cameraOption() {
+    private fun cameraOptions() {
 
         binding.mapView.getMapboxMap().setCamera(
             CameraOptions.Builder()

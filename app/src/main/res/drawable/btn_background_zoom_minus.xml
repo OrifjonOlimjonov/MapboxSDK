@@ -6,6 +6,7 @@
         <solid android:color="@color/zoomButton"/>
         </shape>
     </item>
+
     <item android:drawable="@drawable/ic_zoom_minus"
         android:top="@dimen/_8sdp"
         android:bottom="@dimen/_8sdp"

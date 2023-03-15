@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:state_pressed="true">
+    <layer-list>
+        <item>
+            <shape>
+                <corners android:radius="@dimen/_30sdp" />
+                <gradient
+                    android:angle="-45"
+                    android:endColor="#FFEB3B"
+                    android:startColor="#FFC107" />
+            </shape>
+        </item>
+        <item
+            android:bottom="@dimen/_10sdp"
+            android:drawable="@drawable/ic_exchange"
+            android:left="@dimen/_10sdp"
+            android:right="@dimen/_10sdp"
+            android:top="@dimen/_10sdp" />
+    </layer-list>
+</item>
+    <item android:drawable="@drawable/btn_order_background"/>
+</selector>
