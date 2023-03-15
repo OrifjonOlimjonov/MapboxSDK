@@ -19,6 +19,7 @@ import com.mapbox.maps.plugin.compass.compass
 import com.mapbox.maps.plugin.locationcomponent.*
 import com.mapbox.maps.plugin.scalebar.scalebar
 import uz.orifjon.mapboxexample.databinding.ActivityMainBinding
+import uz.orifjon.mapboxexample.models.LocationDatabase
 import uz.orifjon.mapboxexample.service.LocationService
 import uz.orifjon.mapboxexample.utils.LocationPermissionHelper
 import java.lang.ref.WeakReference
@@ -37,14 +38,14 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
 
         locationPermissionHelper.checkPermissions {
 
             onMapReady()
+
             startSaveLocation()
+
         }
 
 
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity() {
             action = LocationService.ACTION_START
             startService(this)
         }
+
 
     }
 
@@ -95,9 +97,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnNavigation.setOnClickListener {
+            val lastLocation = LocationDatabase.getDatabase(this).locationDao().getLastLocation()
             binding.mapView.getMapboxMap().setCamera(
                 CameraOptions.Builder()
-                    .center(Point.fromLngLat(41.34,69.28))
+                    .center(Point.fromLngLat(lastLocation.longitude,lastLocation.latitude))
                     .zoom(zoom)
                     .build()
             )

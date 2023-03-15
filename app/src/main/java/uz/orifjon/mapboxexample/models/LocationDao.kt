@@ -13,8 +13,9 @@ interface LocationDao {
 
 
     @Query("SELECT * FROM user_location")
-    fun getLocations():List<UserLocation>
+    fun getLocations(): List<UserLocation>
 
 
-
+    @Query("SELECT * FROM user_location ORDER BY ID DESC LIMIT 1")
+    fun getLastLocation(): UserLocation
 }
