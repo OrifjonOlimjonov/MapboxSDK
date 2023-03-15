@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <layer-list>
+            <item>
+                <shape>
+                    <corners android:radius="@dimen/_30sdp"/>
+                    <solid android:color="#FFEB3B"/>
+                </shape>
+            </item>
+            <item android:drawable="@drawable/ic_navigation"
+                android:top="@dimen/_8sdp"
+                android:bottom="@dimen/_8sdp"
+                android:left="@dimen/_8sdp"
+                android:right="@dimen/_8sdp"/>
+        </layer-list>
+    </item>
+
+    <item android:drawable="@drawable/btn_background_navigation"/>
+</selector>
