@@ -26,7 +26,14 @@ class LocationPermissionHelper(val activity: WeakReference<Activity>) {
                     if (granted) {
                         onMapReady()
                     } else {
-                        activity.get()?.finish()
+                        Toast.makeText(
+                            activity.get(), "If the location permission request does not appear, ",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Toast.makeText(
+                            activity.get(), "you should enable it yourself from the settings section.",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             })

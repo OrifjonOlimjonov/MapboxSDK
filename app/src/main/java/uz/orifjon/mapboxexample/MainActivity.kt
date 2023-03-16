@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.mapbox.android.core.location.*
 import com.mapbox.geojson.Point
@@ -88,9 +89,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun onMapReady() {
 
-        cameraOptions()
-
         disabledScaleAndCompass()
+
+        cameraOptions()
 
         configureTheme()
 
