@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity() {
             startService(this)
         }
 
-
     }
 
     private fun onMapReady() {

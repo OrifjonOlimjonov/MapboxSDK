@@ -45,7 +45,7 @@ class LocationService : Service() {
 
     private fun start() {
         locationClient
-            .getLocationUpdates(5000L)
+            .getLocationUpdates(5000L) // interval kamaytirilsa, databasega location yozish tezligi oshadi.
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 val lat = location.latitude
@@ -55,7 +55,6 @@ class LocationService : Service() {
                 )
             }
             .launchIn(serviceScope)
-
     }
     override fun onDestroy() {
         super.onDestroy()
